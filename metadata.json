@@ -1,0 +1,5 @@
+{
+  "name": "Copy of 燃气PE管道知识图谱 (Gas PE Pipeline KG)",
+  "description": "基于Gemini AI的燃气聚乙烯管道数据可视化知识图谱系统。支持自然语言文本提取实体关系、图谱交互编辑、D3.js力导向图展示及本地存储功能。",
+  "requestFramePermissions": []
+}
