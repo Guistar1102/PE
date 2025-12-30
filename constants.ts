@@ -1,15 +1,16 @@
-import { NodeType, GraphData } from './types';
+
+import { NodeType, GraphData, Indicator } from './types';
 
 export const NODE_COLORS: Record<NodeType, string> = {
-  [NodeType.PIPE]: '#3b82f6',     // Blue-500
-  [NodeType.VALVE]: '#ef4444',    // Red-500
-  [NodeType.STATION]: '#eab308',  // Yellow-500
-  [NodeType.FITTING]: '#10b981',  // Emerald-500
-  [NodeType.RISK]: '#f97316',     // Orange-500
-  [NodeType.LOCATION]: '#8b5cf6', // Violet-500
-  [NodeType.PERSON]: '#ec4899',   // Pink-500
-  [NodeType.DOCUMENT]: '#64748b', // Slate-500
-  [NodeType.UNKNOWN]: '#9ca3af',  // Gray-400
+  [NodeType.PIPE]: '#3b82f6',
+  [NodeType.VALVE]: '#ef4444',
+  [NodeType.STATION]: '#eab308',
+  [NodeType.FITTING]: '#10b981',
+  [NodeType.RISK]: '#f97316',
+  [NodeType.LOCATION]: '#8b5cf6',
+  [NodeType.PERSON]: '#ec4899',
+  [NodeType.DOCUMENT]: '#64748b',
+  [NodeType.UNKNOWN]: '#9ca3af',
 };
 
 export const NODE_LABELS_ZH: Record<NodeType, string> = {
@@ -57,29 +58,16 @@ export const GRAPH_TEMPLATES: Record<string, GraphData> = {
       { source: 't1_4', target: 't1_5', label: '参考' },
     ]
   },
-  "complex_network": {
-    nodes: [
-      { id: 'cn_1', label: '中心路PE315', type: NodeType.PIPE },
-      { id: 'cn_2', label: '建设路PE200', type: NodeType.PIPE },
-      { id: 'cn_3', label: '人民路PE160', type: NodeType.PIPE },
-      { id: 'cn_4', label: '三通T-01', type: NodeType.FITTING },
-      { id: 'cn_5', label: '三通T-02', type: NodeType.FITTING },
-      { id: 'cn_6', label: '商业中心调压柜', type: NodeType.STATION },
-      { id: 'cn_7', label: '居民区调压柜', type: NodeType.STATION },
-      { id: 'cn_8', label: '第三方施工占压', type: NodeType.RISK },
-    ],
-    links: [
-      { source: 'cn_1', target: 'cn_4', label: '连接' },
-      { source: 'cn_2', target: 'cn_4', label: '连接' },
-      { source: 'cn_2', target: 'cn_5', label: '连接' },
-      { source: 'cn_3', target: 'cn_5', label: '连接' },
-      { source: 'cn_6', target: 'cn_1', label: '取气' },
-      { source: 'cn_7', target: 'cn_3', label: '取气' },
-      { source: 'cn_8', target: 'cn_2', label: '威胁' },
-    ]
-  },
-  "empty": {
-    nodes: [],
-    links: []
-  }
+  "empty": { nodes: [], links: [] }
 };
+
+// Default Level 2 Indicators for Gas PE Pipeline Risk Assessment
+// Fix: Added missing weightScores and commentScores properties to satisfy the Indicator interface.
+export const DEFAULT_RISK_INDICATORS: Indicator[] = [
+  { id: 'ind_1', name: '管道材质质量', weightScores: [], commentScores: [], scores: [] },
+  { id: 'ind_2', name: '施工焊接质量', weightScores: [], commentScores: [], scores: [] },
+  { id: 'ind_3', name: '第三方施工活动', weightScores: [], commentScores: [], scores: [] },
+  { id: 'ind_4', name: '腐蚀及环境压力', weightScores: [], commentScores: [], scores: [] },
+  { id: 'ind_5', name: '运行维护水平', weightScores: [], commentScores: [], scores: [] },
+  { id: 'ind_6', name: '安全管理制度', weightScores: [], commentScores: [], scores: [] },
+];

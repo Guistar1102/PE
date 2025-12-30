@@ -1,15 +1,15 @@
+
 import { SimulationNodeDatum, SimulationLinkDatum } from 'd3';
 
-// Enum for Node Types specific to Gas PE Pipelines
 export enum NodeType {
-  PIPE = 'PIPE',          // 管道
-  VALVE = 'VALVE',        // 阀门
-  STATION = 'STATION',    // 调压站/场站
-  FITTING = 'FITTING',    // 管件 (弯头, 三通)
-  RISK = 'RISK',          // 风险点/隐患
-  LOCATION = 'LOCATION',  // 地理位置
-  PERSON = 'PERSON',      // 责任人/施工人员
-  DOCUMENT = 'DOCUMENT',  // 施工文档/规范
+  PIPE = 'PIPE',
+  VALVE = 'VALVE',
+  STATION = 'STATION',
+  FITTING = 'FITTING',
+  RISK = 'RISK',
+  LOCATION = 'LOCATION',
+  PERSON = 'PERSON',
+  DOCUMENT = 'DOCUMENT',
   UNKNOWN = 'UNKNOWN'
 }
 
@@ -18,7 +18,6 @@ export interface GraphNode extends SimulationNodeDatum {
   label: string;
   type: NodeType;
   properties?: Record<string, string | number>;
-  // D3 simulation props (optional as they are added by D3)
   x?: number;
   y?: number;
   fx?: number | null;
@@ -26,9 +25,9 @@ export interface GraphNode extends SimulationNodeDatum {
 }
 
 export interface GraphLink extends SimulationLinkDatum<GraphNode> {
-  source: string | GraphNode; // D3 converts string ID to object ref
+  source: string | GraphNode;
   target: string | GraphNode;
-  label: string; // Relationship name (e.g. "CONNECTS_TO")
+  label: string;
 }
 
 export interface GraphData {
@@ -37,22 +36,32 @@ export interface GraphData {
 }
 
 export enum AIModel {
-  FLASH = 'gemini-2.5-flash',
-  PRO = 'gemini-3-pro-preview',
+  FLASH = 'gemini-3-flash-preview',
+  PRO = 'gemini-3-pro-preview'
 }
 
 export interface ExtractionResult {
-  nodes: {
-    id: string;
-    label: string;
-    type: string;
-    properties?: {
-      info?: string;
-    };
-  }[];
-  links: {
-    source: string;
-    target: string;
-    label: string;
-  }[];
+  nodes: GraphNode[];
+  links: GraphLink[];
+}
+
+export interface CloudParams {
+  ex: number;
+  en: number;
+  he: number;
+}
+
+export interface Indicator {
+  id: string;
+  name: string;
+  weightCloud?: CloudParams;
+  commentCloud?: CloudParams;
+  weightScores: number[];
+  commentScores: number[];
+  scores: number[]; // Deprecated but kept for compatibility
+}
+
+export interface RiskAssessmentData {
+  indicators: Indicator[];
+  finalCloud?: CloudParams;
 }
