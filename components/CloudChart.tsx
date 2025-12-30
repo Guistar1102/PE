@@ -84,7 +84,7 @@ const CloudChart: React.FC<CloudChartProps> = ({
     <div className="bg-slate-900/50 backdrop-blur-sm p-4 rounded-xl border border-slate-800/50 shadow-2xl h-full flex flex-col relative overflow-hidden">
       {title && (
         <div className="flex justify-between items-center mb-2 px-2 relative z-10">
-          <h3 className="text-slate-300 text-xs font-bold uppercase tracking-widest">{title}</h3>
+          <h3 className="text-slate-300 text-xs font-semibold uppercase tracking-widest">{title}</h3>
           <div className="flex gap-2">
              {clouds.slice(0, 3).map((c, i) => (
                <div key={i} className="flex items-center gap-1">
@@ -120,7 +120,7 @@ const CloudChart: React.FC<CloudChartProps> = ({
                   <text y={18} textAnchor="middle" fontSize="10" fill="#64748b" fontVariant="tabular-nums">{t}</text>
                 </g>
               ))}
-              <text x={innerWidth} y={35} textAnchor="end" fontSize="10" fill="#475569" fontWeight="bold">评价分值 / 风险值 (Ex)</text>
+              <text x={innerWidth} y={35} textAnchor="end" fontSize="10" fill="#475569" fontWeight="medium">评价分值 / 风险值 (Ex)</text>
             </g>
 
             {/* Y 轴 */}

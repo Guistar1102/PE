@@ -18,10 +18,13 @@ export interface GraphNode extends SimulationNodeDatum {
   label: string;
   type: NodeType;
   properties?: Record<string, string | number>;
+  color?: string; // New: Custom color override
   x?: number;
   y?: number;
   fx?: number | null;
   fy?: number | null;
+  vx?: number;
+  vy?: number;
 }
 
 export interface GraphLink extends SimulationLinkDatum<GraphNode> {

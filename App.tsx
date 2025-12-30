@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import GraphCanvas from './components/GraphCanvas';
 import RiskModule from './components/RiskModule';
+import NodeDetailPanel from './components/NodeDetailPanel';
 import { GraphData, GraphNode, NodeType } from './types';
 import { INITIAL_DATA, NODE_LABELS_ZH, NODE_COLORS, GRAPH_TEMPLATES } from './constants';
 
@@ -119,6 +120,16 @@ const App: React.FC = () => {
     showNotification("节点已删除", 'success');
   };
 
+  const handleUpdateNode = (updatedNode: GraphNode) => {
+    setGraphData(prev => ({
+        ...prev,
+        nodes: prev.nodes.map(n => n.id === updatedNode.id ? { ...n, ...updatedNode } : n)
+    }));
+    // Update local selection to reflect changes immediately
+    setSelectedNode(updatedNode);
+    showNotification("节点信息已更新", 'success');
+  };
+
   const handleClearGraph = () => {
     if (window.confirm("确定要清空画布吗？")) {
       setGraphData({ nodes: [], links: [] });
@@ -186,7 +197,10 @@ const App: React.FC = () => {
           <div className="p-4 border-b border-slate-800 flex items-center gap-2">
             <h1 className="font-bold text-lg text-slate-100 whitespace-nowrap">PE管道管理系统</h1>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+            
+            {/* Template Selection */}
             <div className="space-y-3">
                <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2"><LayoutTemplate size={14} /> 模组选择</h2>
                <div className="flex gap-2">
@@ -198,7 +212,9 @@ const App: React.FC = () => {
                 <button onClick={handleLoadTemplate} className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded text-sm transition-colors">加载</button>
               </div>
             </div>
-            <div className="space-y-3">
+
+            {/* Manual Edit - Always Visible */}
+            <div className="space-y-3 animate-in fade-in duration-300">
               <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2"><MousePointer2 size={14} /> 手动编辑</h2>
               <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
                  <div className="flex border-b border-slate-800">
@@ -208,35 +224,42 @@ const App: React.FC = () => {
                  <div className="p-4 space-y-3">
                    {activeTab === 'node' ? (
                      <>
-                       <input type="text" value={newNodeLabel} onChange={(e) => setNewNodeLabel(e.target.value)} placeholder="名称" className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm" />
-                       <select value={newNodeType} onChange={(e) => setNewNodeType(e.target.value as NodeType)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm">
+                       <input type="text" value={newNodeLabel} onChange={(e) => setNewNodeLabel(e.target.value)} placeholder="名称" className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 placeholder-slate-500" />
+                       <select value={newNodeType} onChange={(e) => setNewNodeType(e.target.value as NodeType)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200">
                          {Object.entries(NODE_LABELS_ZH).map(([key, label]) => (<option key={key} value={key}>{label}</option>))}
                        </select>
-                       <button onClick={handleAddNode} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded text-sm">添加节点</button>
+                       <button onClick={handleAddNode} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded text-sm transition-colors">添加节点</button>
                      </>
                    ) : (
                      <>
-                       <select value={newLinkSource} onChange={(e) => setNewLinkSource(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm"><option value="">起点</option>{graphData.nodes.map(n => (<option key={n.id} value={n.id}>{n.label}</option>))}</select>
-                       <select value={newLinkTarget} onChange={(e) => setNewLinkTarget(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm"><option value="">终点</option>{graphData.nodes.map(n => (<option key={n.id} value={n.id}>{n.label}</option>))}</select>
-                       <input type="text" value={newLinkLabel} onChange={(e) => setNewLinkLabel(e.target.value)} placeholder="关系描述" className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm" />
-                       <button onClick={handleAddLink} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded text-sm">添加关系</button>
+                       <select value={newLinkSource} onChange={(e) => setNewLinkSource(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200"><option value="">起点</option>{graphData.nodes.map(n => (<option key={n.id} value={n.id}>{n.label}</option>))}</select>
+                       <select value={newLinkTarget} onChange={(e) => setNewLinkTarget(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200"><option value="">终点</option>{graphData.nodes.map(n => (<option key={n.id} value={n.id}>{n.label}</option>))}</select>
+                       <input type="text" value={newLinkLabel} onChange={(e) => setNewLinkLabel(e.target.value)} placeholder="关系描述" className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 placeholder-slate-500" />
+                       <button onClick={handleAddLink} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded text-sm transition-colors">添加关系</button>
                      </>
                    )}
                  </div>
               </div>
             </div>
+
+            {/* Node Detail - Visible below Manual Edit when selected */}
             {selectedNode && (
-              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700 relative">
-                <button onClick={() => handleDeleteNode(selectedNode.id)} className="absolute top-2 right-2 text-slate-600 hover:text-red-400"><Trash2 size={16} /></button>
-                <div className="flex items-center gap-2 mb-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: NODE_COLORS[selectedNode.type] }} /><span className="font-bold">{selectedNode.label}</span></div>
-                <div className="text-xs text-slate-500">{NODE_LABELS_ZH[selectedNode.type]}</div>
-              </div>
+               <div className="border-t border-slate-800 pt-4 mt-2 animate-in slide-in-from-left-2 duration-300">
+                  <NodeDetailPanel 
+                      node={selectedNode} 
+                      onClose={() => setSelectedNode(null)} 
+                      onUpdate={handleUpdateNode}
+                      onDelete={handleDeleteNode}
+                  />
+               </div>
             )}
+
           </div>
+          
           <div className="p-4 border-t border-slate-800 grid grid-cols-3 gap-2">
-             <button onClick={handleSaveLocal} className="p-2 bg-slate-800 rounded text-xs"><Save size={16} /> 保存</button>
-             <button onClick={handleLoadLocal} className="p-2 bg-slate-800 rounded text-xs"><Database size={16} /> 读取</button>
-             <button onClick={exportJSON} className="p-2 bg-slate-800 rounded text-xs"><FileJson size={16} /> 导出</button>
+             <button onClick={handleSaveLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Save size={16} className="mb-1 mx-auto" /> 保存</button>
+             <button onClick={handleLoadLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Database size={16} className="mb-1 mx-auto" /> 读取</button>
+             <button onClick={exportJSON} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><FileJson size={16} className="mb-1 mx-auto" /> 导出</button>
           </div>
         </div>
       )}
@@ -250,7 +273,7 @@ const App: React.FC = () => {
                 <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-800 rounded text-slate-400 transition-colors"><Settings size={20} /></button>
                 <span className="text-sm font-semibold text-slate-300">燃气PE管道知识图谱交互系统</span>
               </div>
-              <button onClick={handleClearGraph} className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-sm border border-red-500/20"><Trash2 size={14} /> 清空</button>
+              <button onClick={handleClearGraph} className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-sm border border-red-500/20 flex items-center gap-2 transition-colors"><Trash2 size={14} /> 清空画布</button>
             </div>
             <div ref={containerRef} className="flex-1 bg-black relative">
                <GraphCanvas data={graphData} width={dimensions.width} height={dimensions.height} onNodeClick={setSelectedNode} />
