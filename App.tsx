@@ -10,12 +10,10 @@ import {
   Link2,
   FileJson,
   MousePointer2,
-  ShieldAlert,
   BarChart4,
   Upload
 } from 'lucide-react';
 import GraphCanvas from './components/GraphCanvas';
-import RiskModule from './components/RiskModule';
 import NodeDetailPanel from './components/NodeDetailPanel';
 import { GraphData, GraphNode, NodeType } from './types';
 import { INITIAL_DATA, NODE_LABELS_ZH, NODE_COLORS, GRAPH_TEMPLATES } from './constants';
@@ -33,7 +31,6 @@ const inferNodeType = (label: string): NodeType => {
 };
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'graph' | 'risk'>('graph');
   const [graphData, setGraphData] = useState<GraphData>(INITIAL_DATA);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -247,29 +244,10 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-900 text-slate-100 font-sans">
       
-      {/* Navigation Rail */}
-      <div className="w-16 bg-slate-950 border-r border-slate-800 flex flex-col items-center py-6 gap-6 z-20">
-         <button 
-          onClick={() => setView('graph')}
-          className={`p-3 rounded-xl transition-all ${view === 'graph' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-          title="知识图谱"
-         >
-           <Network size={24} />
-         </button>
-         <button 
-          onClick={() => setView('risk')}
-          className={`p-3 rounded-xl transition-all ${view === 'risk' ? 'bg-red-600 text-white' : 'text-slate-500 hover:text-slate-300'}`}
-          title="风险评价"
-         >
-           <ShieldAlert size={24} />
-         </button>
-      </div>
-
       {/* Sidebar for Graph View */}
-      {view === 'graph' && (
-        <div 
-          className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-slate-950 border-r border-slate-800 transition-all duration-300 flex flex-col overflow-hidden relative z-10`}
-        >
+      <div 
+        className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-slate-950 border-r border-slate-800 transition-all duration-300 flex flex-col overflow-hidden relative z-10`}
+      >
           <div className="p-4 border-b border-slate-800 flex items-center gap-2">
             <h1 className="font-bold text-lg text-slate-100 whitespace-nowrap">PE管道管理系统</h1>
           </div>
@@ -338,26 +316,19 @@ const App: React.FC = () => {
              <input type="file" accept=".txt,.csv" ref={fileInputRef} onChange={handleImportTriples} className="hidden" />
           </div>
         </div>
-      )}
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative h-full">
-        {view === 'graph' ? (
-          <>
-            <div className="h-14 bg-slate-900/90 backdrop-blur border-b border-slate-800 flex items-center justify-between px-4 z-20">
-              <div className="flex items-center gap-3">
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-800 rounded text-slate-400 transition-colors"><Settings size={20} /></button>
-                <span className="text-sm font-semibold text-slate-300">燃气PE管道知识图谱交互系统</span>
-              </div>
-              <button onClick={handleClearGraph} className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-sm border border-red-500/20 flex items-center gap-2 transition-colors"><Trash2 size={14} /> 清空画布</button>
-            </div>
-            <div ref={containerRef} className="flex-1 bg-black relative">
-               <GraphCanvas data={graphData} width={dimensions.width} height={dimensions.height} onNodeClick={setSelectedNode} />
-            </div>
-          </>
-        ) : (
-          <RiskModule />
-        )}
+        <div className="h-14 bg-slate-900/90 backdrop-blur border-b border-slate-800 flex items-center justify-between px-4 z-20">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-800 rounded text-slate-400 transition-colors"><Settings size={20} /></button>
+            <span className="text-sm font-semibold text-slate-300">燃气PE管道知识图谱交互系统</span>
+          </div>
+          <button onClick={handleClearGraph} className="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-sm border border-red-500/20 flex items-center gap-2 transition-colors"><Trash2 size={14} /> 清空画布</button>
+        </div>
+        <div ref={containerRef} className="flex-1 bg-black relative">
+           <GraphCanvas data={graphData} width={dimensions.width} height={dimensions.height} onNodeClick={setSelectedNode} />
+        </div>
 
         {notification && (
           <div className={`absolute top-20 right-8 px-4 py-3 rounded shadow-lg border z-50 animate-fade-in-down ${notification.type === 'success' ? 'bg-emerald-900/90 border-emerald-700 text-emerald-100' : 'bg-red-900/90 border-red-700 text-red-100'}`}>

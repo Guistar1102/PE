@@ -1,5 +1,5 @@
 
-import { NodeType, GraphData, Indicator } from './types';
+import { NodeType, GraphData } from './types';
 
 export const NODE_COLORS: Record<NodeType, string> = {
   [NodeType.PIPE]: '#3b82f6',    // Blue
@@ -183,12 +183,3 @@ export const GRAPH_TEMPLATES: Record<string, GraphData> = {
   },
   "empty": { nodes: [], links: [] }
 };
-
-export const DEFAULT_RISK_INDICATORS: Indicator[] = [
-  { id: 'ind_1', name: '管道材质质量', weightScores: [], commentScores: [], scores: [] },
-  { id: 'ind_2', name: '施工焊接质量', weightScores: [], commentScores: [], scores: [] },
-  { id: 'ind_3', name: '第三方施工活动', weightScores: [], commentScores: [], scores: [] },
-  { id: 'ind_4', name: '腐蚀及环境压力', weightScores: [], commentScores: [], scores: [] },
-  { id: 'ind_5', name: '运行维护水平', weightScores: [], commentScores: [], scores: [] },
-  { id: 'ind_6', name: '安全管理制度', weightScores: [], commentScores: [], scores: [] },
-];

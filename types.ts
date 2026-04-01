@@ -47,24 +47,3 @@ export interface ExtractionResult {
   nodes: GraphNode[];
   links: GraphLink[];
 }
-
-export interface CloudParams {
-  ex: number;
-  en: number;
-  he: number;
-}
-
-export interface Indicator {
-  id: string;
-  name: string;
-  weightCloud?: CloudParams;
-  commentCloud?: CloudParams;
-  weightScores: number[];
-  commentScores: number[];
-  scores: number[]; // Deprecated but kept for compatibility
-}
-
-export interface RiskAssessmentData {
-  indicators: Indicator[];
-  finalCloud?: CloudParams;
-}
