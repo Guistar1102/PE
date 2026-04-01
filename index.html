@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>燃气PE管道知识图谱</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontSize: {
+              'xs': ['0.85rem', { lineHeight: '1.25rem' }],
+              'sm': ['1rem', { lineHeight: '1.5rem' }],
+              'base': ['1.125rem', { lineHeight: '1.75rem' }],
+              'lg': ['1.25rem', { lineHeight: '1.75rem' }],
+              'xl': ['1.5rem', { lineHeight: '2rem' }],
+              '2xl': ['1.75rem', { lineHeight: '2.25rem' }],
+              '3xl': ['2.25rem', { lineHeight: '2.5rem' }],
+            }
+          }
+        }
+      }
+    </script>
     <style>
       /* Custom scrollbar for webkit */
       ::-webkit-scrollbar {
@@ -34,6 +51,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-gray-900 text-gray-100 overflow-hidden">
     <div id="root"></div>

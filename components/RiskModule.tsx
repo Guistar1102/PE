@@ -432,7 +432,7 @@ const RiskModule: React.FC = () => {
 
           <div className="px-4 pt-5 pb-2">
               <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 border border-slate-700/50 rounded-xl p-3 shadow-inner">
-                 <div className="text-[11px] font-bold text-slate-400 mb-2 flex items-center gap-2">
+                 <div className="text-sm font-bold text-slate-400 mb-2 flex items-center gap-2">
                     <Activity size={14} className="text-blue-400" /> 
                     <span>综合风险评估结果</span>
                  </div>
@@ -440,7 +440,7 @@ const RiskModule: React.FC = () => {
                    <div key={layer.id} className="flex items-center justify-between bg-slate-950/50 rounded-lg p-2 border border-slate-800/50">
                       <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
-                        <span className="text-xs text-slate-200 font-medium">综合云 (Final Cloud)</span>
+                        <span className="text-sm text-slate-200 font-medium">综合云 (Final Cloud)</span>
                       </div>
                       <button 
                         onClick={(e) => toggleVisibility(layer.id, e)} 
@@ -455,8 +455,8 @@ const RiskModule: React.FC = () => {
 
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1.5 custom-scrollbar">
              <div className="flex justify-between items-end px-1 mb-2 border-b border-slate-800/50 pb-1">
-               <span className="text-[10px] font-bold text-slate-500 uppercase">二级指标 ({indicators.length})</span>
-               <span className="text-[10px] text-slate-600">显隐控制</span>
+               <span className="text-xs font-bold text-slate-500 uppercase">二级指标 ({indicators.length})</span>
+               <span className="text-xs text-slate-600">显隐控制</span>
              </div>
              
              {indicators.map((ind, index) => {
@@ -481,7 +481,7 @@ const RiskModule: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 overflow-hidden">
                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: indicatorColor }} />
-                           <span className={`text-xs font-medium truncate transition-colors ${isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
+                           <span className={`text-sm font-medium truncate transition-colors ${isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
                              {ind.name}
                            </span>
                         </div>
@@ -492,7 +492,7 @@ const RiskModule: React.FC = () => {
                         {wLayer && (
                           <button 
                             onClick={(e) => toggleVisibility(wLayer.id, e)}
-                            className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded text-[10px] border transition-all ${
+                            className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded text-xs border transition-all ${
                               wLayer.visible 
                                ? 'bg-slate-700/50 text-slate-200 border-slate-600' 
                                : 'bg-slate-900/50 text-slate-600 border-slate-800 opacity-60 hover:opacity-100'
@@ -505,7 +505,7 @@ const RiskModule: React.FC = () => {
                         {cLayer && (
                           <button 
                             onClick={(e) => toggleVisibility(cLayer.id, e)}
-                            className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded text-[10px] border transition-all ${
+                            className={`flex-1 flex items-center justify-center gap-1.5 py-1 rounded text-xs border transition-all ${
                               cLayer.visible 
                                ? 'bg-slate-700/50 text-slate-200 border-slate-600' 
                                : 'bg-slate-900/50 text-slate-600 border-slate-800 opacity-60 hover:opacity-100'
@@ -525,10 +525,10 @@ const RiskModule: React.FC = () => {
           <div className="p-4 border-t border-slate-800/60 bg-[#050810]">
              <div className="flex items-center gap-3 bg-slate-900/80 p-2 rounded-lg border border-slate-800">
                <User size={14} className="text-slate-500"/>
-               <span className="text-xs text-slate-400 flex-1">客观样本数量</span>
+               <span className="text-sm text-slate-400 flex-1">客观样本数量</span>
                <div className="flex items-center gap-2">
                  <button onClick={() => setValueCount(Math.max(1, valueCount - 1))} className="w-5 h-5 flex items-center justify-center bg-slate-800 rounded text-slate-400 hover:text-white hover:bg-slate-700">-</button>
-                 <span className="text-xs font-mono text-blue-400 w-4 text-center">{valueCount}</span>
+                 <span className="text-sm font-mono text-blue-400 w-4 text-center">{valueCount}</span>
                  <button onClick={() => setValueCount(valueCount + 1)} className="w-5 h-5 flex items-center justify-center bg-slate-800 rounded text-slate-400 hover:text-white hover:bg-slate-700">+</button>
                </div>
              </div>
@@ -558,7 +558,7 @@ const RiskModule: React.FC = () => {
                    燃气PE管道风险评价模型 (Cloud Model)
                  </h1>
                  
-                 <div className={`ml-4 px-3 py-1 rounded-full text-[10px] font-bold ${conclusion.bg} ${conclusion.color} border ${conclusion.border} flex items-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.2)] whitespace-nowrap transition-all duration-500`}>
+                 <div className={`ml-4 px-3 py-1 rounded-full text-xs font-bold ${conclusion.bg} ${conclusion.color} border ${conclusion.border} flex items-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.2)] whitespace-nowrap transition-all duration-500`}>
                    {conclusion.level >= 3 ? <AlertTriangle size={12} className="animate-pulse" /> : <CheckCircle2 size={12} />}
                    {conclusion.text}
                  </div>
@@ -568,13 +568,13 @@ const RiskModule: React.FC = () => {
            <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-800/80">
              <button 
                 onClick={() => setViewMode('viz')} 
-                className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all flex items-center gap-1.5 ${viewMode === 'viz' ? 'bg-slate-800 text-blue-400 shadow-sm border border-slate-700/50' : 'text-slate-500 hover:text-slate-300'}`}
+                className={`px-3 py-1.5 rounded-md text-sm font-bold transition-all flex items-center gap-1.5 ${viewMode === 'viz' ? 'bg-slate-800 text-blue-400 shadow-sm border border-slate-700/50' : 'text-slate-500 hover:text-slate-300'}`}
              >
                 <LayoutDashboard size={14} /> 云模型图谱
              </button>
              <button 
                 onClick={() => setViewMode('table')} 
-                className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all flex items-center gap-1.5 ${viewMode === 'table' ? 'bg-slate-800 text-blue-400 shadow-sm border border-slate-700/50' : 'text-slate-500 hover:text-slate-300'}`}
+                className={`px-3 py-1.5 rounded-md text-sm font-bold transition-all flex items-center gap-1.5 ${viewMode === 'table' ? 'bg-slate-800 text-blue-400 shadow-sm border border-slate-700/50' : 'text-slate-500 hover:text-slate-300'}`}
              >
                 <TableIcon size={14} /> 数据矩阵
              </button>
@@ -591,7 +591,7 @@ const RiskModule: React.FC = () => {
                   title="双击放大"
                 >
                    <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                      <div className="bg-black/40 backdrop-blur text-[10px] text-slate-400 px-2 py-1 rounded border border-slate-700/50 flex items-center gap-1">
+                      <div className="bg-black/40 backdrop-blur text-xs text-slate-400 px-2 py-1 rounded border border-slate-700/50 flex items-center gap-1">
                         <Maximize2 size={10} /> 双击可放大查看细节
                       </div>
                    </div>
@@ -631,7 +631,7 @@ const RiskModule: React.FC = () => {
                       <thead className="sticky top-0 z-10 bg-slate-900 shadow-md">
                         <tr className="border-b border-slate-700/60">
                           <th className="p-4 font-bold text-slate-200 text-base w-72 border-r border-slate-800/50 tracking-wide">
-                            二级指标项 <span className="text-slate-500 text-xs font-normal ml-2">(点击查看明细)</span>
+                            二级指标项 <span className="text-slate-500 text-sm font-normal ml-2">(点击查看明细)</span>
                           </th>
                           {Array.from({ length: valueCount }).map((_, i) => (
                             <th key={i} className="p-4 font-bold text-slate-400 text-base text-center border-r border-slate-800/50 last:border-0">
@@ -655,7 +655,7 @@ const RiskModule: React.FC = () => {
                                     <div className="font-bold text-slate-200 text-base group-hover:text-blue-400 transition-colors flex items-center gap-2">
                                       {ind.name} <ExternalLink size={14} className="opacity-0 group-hover:opacity-100" />
                                     </div>
-                                    <div className="text-xs text-slate-500 font-mono mt-0.5">参数类型: 权重 (Weight)</div>
+                                    <div className="text-sm text-slate-500 font-mono mt-0.5">参数类型: 权重 (Weight)</div>
                                 </div>
                               </td>
                               {(ind as any).weightScores.map((score: number, idx: number) => (
@@ -706,7 +706,7 @@ const RiskModule: React.FC = () => {
          <div className="h-14 px-6 border-b border-slate-800/60 flex items-center justify-between">
             <div className="flex items-center gap-2 text-slate-200">
               <Sliders size={16} className="text-blue-400" />
-              <span className="text-xs font-bold uppercase tracking-wider">实时面板</span>
+              <span className="text-sm font-bold uppercase tracking-wider">实时面板</span>
             </div>
             <HelpCircle size={14} className="text-slate-600 cursor-help" />
          </div>
@@ -716,19 +716,19 @@ const RiskModule: React.FC = () => {
                
                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
                   <div className="flex justify-between items-start mb-2">
-                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-0.5 rounded">当前编辑</span>
+                     <span className="text-xs font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-2 py-0.5 rounded">当前编辑</span>
                   </div>
                   <h3 className="text-sm font-bold text-white leading-snug mb-1">{currentIndicator.name}</h3>
                   
                   <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-800/50">
                      <div>
-                        <div className="text-[10px] text-slate-500 mb-0.5">平均权重</div>
+                        <div className="text-xs text-slate-500 mb-0.5">平均权重</div>
                         <div className="text-lg font-mono font-bold text-blue-400">
                           {((currentIndicator as any).weightScores.reduce((a:number,b:number)=>a+b,0)/valueCount).toFixed(2)}
                         </div>
                      </div>
                      <div>
-                        <div className="text-[10px] text-slate-500 mb-0.5">平均得分</div>
+                        <div className="text-xs text-slate-500 mb-0.5">平均得分</div>
                         <div className="text-lg font-mono font-bold text-emerald-400">
                           {((currentIndicator as any).commentScores.reduce((a:number,b:number)=>a+b,0)/valueCount).toFixed(1)}
                         </div>
@@ -740,13 +740,13 @@ const RiskModule: React.FC = () => {
                   <div className="flex items-center justify-between pb-2 border-b border-slate-800/50">
                      <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_currentColor]" />
-                        <span className="text-xs font-bold text-blue-400">权重因子 (1-10)</span>
+                        <span className="text-sm font-bold text-blue-400">权重因子 (1-10)</span>
                      </div>
                   </div>
                   <div className="space-y-4">
                     {currentIndicator.weightScores.map((score, i) => (
                        <div key={i} className="group">
-                          <div className="flex justify-between text-[10px] text-slate-400 mb-1.5">
+                          <div className="flex justify-between text-xs text-slate-400 mb-1.5">
                              <span className="font-medium group-hover:text-blue-300 transition-colors">样本 {i+1}</span>
                              <span className="font-mono text-slate-200 bg-slate-800 px-1.5 rounded">{score.toFixed(1)}</span>
                           </div>
@@ -767,15 +767,15 @@ const RiskModule: React.FC = () => {
                   <div className="flex items-center justify-between pb-2 border-b border-slate-800/50">
                      <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_currentColor]" />
-                        <span className="text-xs font-bold text-emerald-400">风险评价 (0-100)</span>
+                        <span className="text-sm font-bold text-emerald-400">风险评价 (0-100)</span>
                      </div>
                   </div>
                   <div className="space-y-4">
                     {currentIndicator.commentScores.map((score, i) => (
                        <div key={i} className="group">
-                          <div className="flex justify-between text-[10px] text-slate-400 mb-1.5">
+                          <div className="flex justify-between text-xs text-slate-400 mb-1.5">
                              <span className="font-medium group-hover:text-emerald-300 transition-colors">样本 {i+1}</span>
-                             <div className={`font-mono px-1.5 rounded text-[10px] ${score < 60 ? 'bg-red-900/30 text-red-400' : 'bg-slate-800 text-slate-200'}`}>
+                             <div className={`font-mono px-1.5 rounded text-xs ${score < 60 ? 'bg-red-900/30 text-red-400' : 'bg-slate-800 text-slate-200'}`}>
                                {score.toFixed(1)}
                              </div>
                           </div>
@@ -803,7 +803,7 @@ const RiskModule: React.FC = () => {
                </div>
                <div>
                   <h4 className="text-sm font-bold text-slate-400 mb-1">未选择指标</h4>
-                  <p className="text-xs">请点击左侧列表中的任意指标<br/>以查看详情和调整评分参数</p>
+                  <p className="text-sm">请点击左侧列表中的任意指标<br/>以查看详情和调整评分参数</p>
                </div>
             </div>
          )}

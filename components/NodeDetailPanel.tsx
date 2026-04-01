@@ -84,7 +84,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
       <div className="h-10 bg-slate-800/50 border-b border-slate-800 flex items-center justify-between px-3">
         <div className="flex items-center gap-2">
           <Settings2 size={14} className="text-blue-400"/>
-          <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">节点详情编辑</span>
+          <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">节点详情编辑</span>
         </div>
         <button onClick={onClose} className="text-slate-500 hover:text-slate-300 transition-colors" title="关闭详情">
             <X size={14} />
@@ -106,13 +106,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
       <div className="flex border-b border-slate-800">
         <button 
           onClick={() => setActiveTab('info')}
-          className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 ${activeTab === 'info' ? 'text-blue-400 bg-slate-800' : 'text-slate-500 hover:bg-slate-800/50'}`}
+          className={`flex-1 py-2 text-sm font-medium flex items-center justify-center gap-1.5 ${activeTab === 'info' ? 'text-blue-400 bg-slate-800' : 'text-slate-500 hover:bg-slate-800/50'}`}
         >
           <List size={12} /> 属性
         </button>
         <button 
           onClick={() => setActiveTab('style')}
-          className={`flex-1 py-2 text-xs font-medium flex items-center justify-center gap-1.5 ${activeTab === 'style' ? 'text-blue-400 bg-slate-800' : 'text-slate-500 hover:bg-slate-800/50'}`}
+          className={`flex-1 py-2 text-sm font-medium flex items-center justify-center gap-1.5 ${activeTab === 'style' ? 'text-blue-400 bg-slate-800' : 'text-slate-500 hover:bg-slate-800/50'}`}
         >
           <Palette size={12} /> 样式
         </button>
@@ -124,19 +124,19 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
         {activeTab === 'info' && (
           <>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider">基本信息</label>
+              <label className="text-xs uppercase text-slate-500 font-bold tracking-wider">基本信息</label>
               <div className="bg-slate-950/50 rounded p-2 border border-slate-800 space-y-1.5">
-                 <div className="flex justify-between items-center text-xs">
+                 <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-500">ID</span>
                     <span className="font-mono text-slate-400 truncate max-w-[120px]" title={editedNode.id}>{editedNode.id}</span>
                  </div>
-                 <div className="flex justify-between items-center text-xs">
+                 <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-500">类型</span>
-                    <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">{NODE_LABELS_ZH[editedNode.type]}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-xs">{NODE_LABELS_ZH[editedNode.type]}</span>
                  </div>
-                 <div className="flex justify-between items-center text-xs">
+                 <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-500">坐标</span>
-                    <span className="font-mono text-slate-400 text-[10px]">
+                    <span className="font-mono text-slate-400 text-xs">
                       {Math.round(editedNode.x || 0)}, {Math.round(editedNode.y || 0)}
                     </span>
                  </div>
@@ -144,19 +144,19 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider flex justify-between items-center">
+              <label className="text-xs uppercase text-slate-500 font-bold tracking-wider flex justify-between items-center">
                 <span>业务属性</span>
               </label>
               
               <div className="space-y-1.5">
                 {Object.entries(editedNode.properties || {}).map(([key, val]) => (
-                  <div key={key} className="flex items-center gap-2 text-xs group">
-                     <div className="w-1/3 text-slate-500 truncate text-[10px]" title={key}>{key}</div>
+                  <div key={key} className="flex items-center gap-2 text-sm group">
+                     <div className="w-1/3 text-slate-500 truncate text-xs" title={key}>{key}</div>
                      <input 
                        type="text" 
                        value={val} 
                        onChange={(e) => handlePropChange(key, e.target.value)}
-                       className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-300 focus:border-blue-500 outline-none text-[10px]"
+                       className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-300 focus:border-blue-500 outline-none text-xs"
                      />
                      <button onClick={() => removeProperty(key)} className="text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
                        <MinusCircle size={12} />
@@ -170,13 +170,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
                      placeholder="键"
                      value={newPropKey}
                      onChange={e => setNewPropKey(e.target.value)}
-                     className="w-1/3 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300"
+                     className="w-1/3 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-slate-300"
                    />
                    <input 
                      placeholder="值"
                      value={newPropValue}
                      onChange={e => setNewPropValue(e.target.value)}
-                     className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300"
+                     className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-slate-300"
                    />
                    <button onClick={addProperty} className="text-slate-400 hover:text-blue-400">
                      <Plus size={14} />
@@ -190,20 +190,20 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
         {activeTab === 'style' && (
           <div className="space-y-4">
              <div className="space-y-2">
-               <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider">节点名称</label>
+               <label className="text-xs uppercase text-slate-500 font-bold tracking-wider">节点名称</label>
                <div className="flex items-center gap-2">
                  <Type size={14} className="text-slate-500" />
                  <input 
                     type="text" 
                     value={editedNode.label} 
                     onChange={(e) => setEditedNode({...editedNode, label: e.target.value})}
-                    className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-xs text-slate-200 focus:border-blue-500 outline-none"
+                    className="flex-1 bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-sm text-slate-200 focus:border-blue-500 outline-none"
                  />
                </div>
              </div>
 
              <div className="space-y-2">
-               <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider">节点颜色</label>
+               <label className="text-xs uppercase text-slate-500 font-bold tracking-wider">节点颜色</label>
                <div className="flex gap-2 flex-wrap">
                   {Object.values(NODE_COLORS).map(color => (
                     <button
@@ -228,11 +228,11 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
              </div>
 
              <div className="space-y-2">
-               <label className="text-[10px] uppercase text-slate-500 font-bold tracking-wider">类型分类</label>
+               <label className="text-xs uppercase text-slate-500 font-bold tracking-wider">类型分类</label>
                <select 
                  value={editedNode.type}
                  onChange={(e) => setEditedNode({...editedNode, type: e.target.value as NodeType})}
-                 className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-xs text-slate-300 focus:border-blue-500 outline-none"
+                 className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-sm text-slate-300 focus:border-blue-500 outline-none"
                >
                  {Object.entries(NODE_LABELS_ZH).map(([key, label]) => (
                     <option key={key} value={key}>{label}</option>
@@ -248,7 +248,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({ node, onClose, onUpda
       <div className="p-3 border-t border-slate-800 bg-slate-950/50 flex justify-end">
          <button 
            onClick={handleSave} 
-           className="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs py-2 rounded flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-500/20"
+           className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm py-2 rounded flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-500/20"
          >
            <Save size={14} /> 保存更改
          </button>

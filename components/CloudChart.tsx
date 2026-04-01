@@ -1,5 +1,5 @@
 
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { CloudParams } from '../types';
 import { generateCloudDrops } from '../utils/cloudModel';
@@ -21,13 +21,30 @@ const CloudChart: React.FC<CloudChartProps> = ({
   title,
   showYAxis = true
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 800, height: height || 300 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(entries => {
+      if (!entries || entries.length === 0) return;
+      const { width, height } = entries[0].contentRect;
+      if (width > 0 && height > 0) {
+        setDimensions({ width, height });
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const margin = { top: 30, right: 30, bottom: 40, left: showYAxis ? 50 : 20 };
   
-  // 保持与原 SVG 坐标系一致的参考宽度
-  const containerWidth = 800; 
-  const innerWidth = containerWidth - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  // 动态获取容器宽高
+  const containerWidth = dimensions.width; 
+  const containerHeight = dimensions.height;
+  const innerWidth = Math.max(0, containerWidth - margin.left - margin.right);
+  const innerHeight = Math.max(0, containerHeight - margin.top - margin.bottom);
 
   // 坐标轴比例尺
   const xScale = d3.scaleLinear().domain(domain).range([0, innerWidth]);
@@ -35,11 +52,13 @@ const CloudChart: React.FC<CloudChartProps> = ({
 
   // 计算云滴数据
   const chartData = useMemo(() => {
+    // 动态调整点数：如果屏幕很宽，增加点数以保持密度
+    const pointCount = Math.max(6000, Math.floor((containerWidth / 800) * 6000));
     return clouds.filter(c => c.visible !== false).map(c => ({
       ...c,
-      drops: generateCloudDrops(c.params, 1000) // 每个云模型 1000 个点
+      drops: generateCloudDrops(c.params, pointCount) // 动态点数
     }));
-  }, [clouds]);
+  }, [clouds, containerWidth]);
 
   // 使用 Canvas 进行高性能绘制
   useEffect(() => {
@@ -51,11 +70,11 @@ const CloudChart: React.FC<CloudChartProps> = ({
     // 处理高分屏模糊问题 (Retina)
     const dpr = window.devicePixelRatio || 1;
     canvas.width = containerWidth * dpr;
-    canvas.height = height * dpr;
+    canvas.height = containerHeight * dpr;
     ctx.scale(dpr, dpr);
 
     // 清空画布
-    ctx.clearRect(0, 0, containerWidth, height);
+    ctx.clearRect(0, 0, containerWidth, containerHeight);
     
     // 移动画笔到边距区域
     ctx.translate(margin.left, margin.top);
@@ -71,37 +90,37 @@ const CloudChart: React.FC<CloudChartProps> = ({
         // 仅在绘图区域内绘制
         if (x >= 0 && x <= innerWidth && y >= 0 && y <= innerHeight) {
           ctx.beginPath();
-          // 根据隶属度(mu)调整透明度，复现“云”的朦胧感
-          ctx.globalAlpha = d.y * 0.4; 
-          ctx.arc(x, y, 0.9, 0, Math.PI * 2);
+          // 根据隶属度(mu)调整透明度，保证底部低隶属度区域也清晰可见
+          ctx.globalAlpha = Math.max(0.2, d.y * 0.6); 
+          ctx.arc(x, y, 1.0, 0, Math.PI * 2);
           ctx.fill();
         }
       });
     });
-  }, [chartData, xScale, yScale, margin.left, margin.top, height]);
+  }, [chartData, xScale, yScale, margin.left, margin.top, containerWidth, containerHeight, innerWidth, innerHeight]);
 
   return (
     <div className="bg-slate-900/50 backdrop-blur-sm p-4 rounded-xl border border-slate-800/50 shadow-2xl h-full flex flex-col relative overflow-hidden">
       {title && (
         <div className="flex justify-between items-center mb-2 px-2 relative z-10">
-          <h3 className="text-slate-300 text-xs font-semibold uppercase tracking-widest">{title}</h3>
+          <h3 className="text-slate-300 text-sm font-semibold uppercase tracking-widest">{title}</h3>
           <div className="flex gap-2">
              {clouds.slice(0, 3).map((c, i) => (
                <div key={i} className="flex items-center gap-1">
                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: c.color }} />
-                 <span className="text-[10px] text-slate-500">{c.label}</span>
+                 <span className="text-sm text-slate-500">{c.label}</span>
                </div>
              ))}
           </div>
         </div>
       )}
       
-      <div className="flex-1 min-h-0 relative">
+      <div ref={containerRef} className="flex-1 min-h-0 relative">
         {/* 底层：SVG 渲染网格和坐标轴 (文字需要矢量清晰) */}
         <svg 
-          viewBox={`0 0 ${containerWidth} ${height}`} 
+          viewBox={`0 0 ${containerWidth} ${containerHeight}`} 
           className="absolute inset-0 w-full h-full pointer-events-none z-0"
-          preserveAspectRatio="xMidYMid meet"
+          preserveAspectRatio="none"
         >
           <g transform={`translate(${margin.left}, ${margin.top})`}>
             {/* 网格线 */}
@@ -117,10 +136,10 @@ const CloudChart: React.FC<CloudChartProps> = ({
               {xScale.ticks(10).map(t => (
                 <g key={t} transform={`translate(${xScale(t)}, 0)`}>
                   <line y1={0} y2={5} stroke="#475569" />
-                  <text y={18} textAnchor="middle" fontSize="10" fill="#64748b" fontVariant="tabular-nums">{t}</text>
+                  <text y={18} textAnchor="middle" fontSize="14" fill="#64748b" fontVariant="tabular-nums">{t}</text>
                 </g>
               ))}
-              <text x={innerWidth} y={35} textAnchor="end" fontSize="10" fill="#475569" fontWeight="medium">评价分值 / 风险值 (Ex)</text>
+              <text x={innerWidth} y={35} textAnchor="end" fontSize="14" fill="#475569" fontWeight="medium">评价分值 / 风险值 (Ex)</text>
             </g>
 
             {/* Y 轴 */}
@@ -130,7 +149,7 @@ const CloudChart: React.FC<CloudChartProps> = ({
                 {yScale.ticks(5).map(t => (
                   <g key={t} transform={`translate(0, ${yScale(t)})`}>
                     <line x1={0} x2={-5} stroke="#475569" />
-                    <text x={-12} dy="0.32em" textAnchor="end" fontSize="10" fill="#64748b">{t.toFixed(1)}</text>
+                    <text x={-12} dy="0.32em" textAnchor="end" fontSize="14" fill="#64748b">{t.toFixed(1)}</text>
                   </g>
                 ))}
               </g>

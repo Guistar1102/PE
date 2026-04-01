@@ -174,7 +174,7 @@ const GraphCanvas: React.FC<GraphCanvasProps> = ({ data, onNodeClick, width = 80
       .data(simulationLinks)
       .join("text")
       .text(d => d.label)
-      .attr("font-size", "9px")
+      .attr("font-size", "12px")
       .attr("fill", "#94a3b8")
       .attr("text-anchor", "middle")
       .attr("dy", -6)
@@ -249,7 +249,7 @@ const GraphCanvas: React.FC<GraphCanvasProps> = ({ data, onNodeClick, width = 80
       .attr("dy", 4)
       .attr("text-anchor", "middle")
       .attr("fill", d => getNodeColor(d)) // Updated
-      .attr("font-size", "10px")
+      .attr("font-size", "14px")
       .attr("font-weight", "bold")
       .style("pointer-events", "none");
 
@@ -259,7 +259,7 @@ const GraphCanvas: React.FC<GraphCanvasProps> = ({ data, onNodeClick, width = 80
       .attr("dy", 28)
       .attr("text-anchor", "middle")
       .attr("fill", "#e2e8f0")
-      .attr("font-size", "11px")
+      .attr("font-size", "15px")
       .attr("font-weight", 500)
       .style("pointer-events", "none")
       .style("text-shadow", "0 2px 4px #000");
@@ -327,7 +327,7 @@ const GraphCanvas: React.FC<GraphCanvasProps> = ({ data, onNodeClick, width = 80
       <div className="absolute top-4 left-4 pointer-events-none">
         <div className="flex items-center gap-2">
            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-           <span className="text-[10px] text-blue-400 font-mono tracking-widest uppercase">Live System Monitor</span>
+           <span className="text-xs text-blue-400 font-mono tracking-widest uppercase">Live System Monitor</span>
         </div>
       </div>
     </div>

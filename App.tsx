@@ -13,13 +13,26 @@ import {
   FileJson,
   MousePointer2,
   ShieldAlert,
-  BarChart4
+  BarChart4,
+  Upload
 } from 'lucide-react';
 import GraphCanvas from './components/GraphCanvas';
 import RiskModule from './components/RiskModule';
 import NodeDetailPanel from './components/NodeDetailPanel';
 import { GraphData, GraphNode, NodeType } from './types';
 import { INITIAL_DATA, NODE_LABELS_ZH, NODE_COLORS, GRAPH_TEMPLATES } from './constants';
+
+const inferNodeType = (label: string): NodeType => {
+  if (/(管|PE|钢)/.test(label) && !/(管理|人员)/.test(label)) return NodeType.PIPE;
+  if (/(阀|泵|表|计|缸|设备)/.test(label)) return NodeType.VALVE;
+  if (/(站|厂|库|系统)/.test(label)) return NodeType.STATION;
+  if (/(接头|法兰|三通|弯头|管件|警示带|示踪线|装置)/.test(label)) return NodeType.FITTING;
+  if (/(风险|泄漏|腐蚀|隐患|违规|破坏|事故|报警|检测|试验|测试|评估|占压|施工)/.test(label)) return NodeType.RISK;
+  if (/(位置|坐标|区|路|街|村|镇|市|省|环境|土壤|深度|河流|交通)/.test(label)) return NodeType.LOCATION;
+  if (/(人|工|员|公司|单位|局|商|长|张|李|王|赵)/.test(label)) return NodeType.PERSON;
+  if (/(文件|记录|报告|证|书|规范|标准|图|表|数据|参数|温度|压力|时间|速率|率|寿命|批号)/.test(label)) return NodeType.DOCUMENT;
+  return NodeType.UNKNOWN;
+};
 
 const App: React.FC = () => {
   const [view, setView] = useState<'graph' | 'risk'>('graph');
@@ -38,6 +51,7 @@ const App: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('demo');
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
@@ -168,6 +182,83 @@ const App: React.FC = () => {
     downloadAnchorNode.remove();
   };
 
+  const handleImportTriples = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      if (!text) return;
+
+      const lines = text.split('\n');
+      const newNodesMap = new Map<string, GraphNode>();
+      const newLinks: any[] = [];
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        // Try to split by tab, comma, or space
+        let parts = trimmed.split('\t');
+        if (parts.length < 3) parts = trimmed.split(',');
+        if (parts.length < 3) parts = trimmed.split(/\s+/);
+
+        if (parts.length >= 3) {
+          const subject = parts[0].trim();
+          const predicate = parts[1].trim();
+          const object = parts[2].trim();
+
+          if (!subject || !predicate || !object) return;
+
+          if (!newNodesMap.has(subject)) {
+            newNodesMap.set(subject, {
+              id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              label: subject,
+              type: inferNodeType(subject),
+              x: dimensions.width / 2 + (Math.random() - 0.5) * 200,
+              y: dimensions.height / 2 + (Math.random() - 0.5) * 200
+            });
+          }
+          if (!newNodesMap.has(object)) {
+            newNodesMap.set(object, {
+              id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              label: object,
+              type: inferNodeType(object),
+              x: dimensions.width / 2 + (Math.random() - 0.5) * 200,
+              y: dimensions.height / 2 + (Math.random() - 0.5) * 200
+            });
+          }
+
+          const sourceNode = newNodesMap.get(subject)!;
+          const targetNode = newNodesMap.get(object)!;
+
+          newLinks.push({
+            source: sourceNode.id,
+            target: targetNode.id,
+            label: predicate
+          });
+        }
+      });
+
+      if (newNodesMap.size > 0) {
+        setGraphData({
+          nodes: Array.from(newNodesMap.values()),
+          links: newLinks
+        });
+        setSelectedNode(null);
+        showNotification(`成功导入 ${newNodesMap.size} 个节点和 ${newLinks.length} 条关系`, 'success');
+      } else {
+        showNotification('未找到有效的三元组数据，请确保格式为 "主语 谓语 宾语"', 'error');
+      }
+    };
+    reader.readAsText(file);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="flex h-screen bg-slate-900 text-slate-100 font-sans">
       
@@ -256,10 +347,12 @@ const App: React.FC = () => {
 
           </div>
           
-          <div className="p-4 border-t border-slate-800 grid grid-cols-3 gap-2">
+          <div className="p-4 border-t border-slate-800 grid grid-cols-4 gap-2">
              <button onClick={handleSaveLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Save size={16} className="mb-1 mx-auto" /> 保存</button>
              <button onClick={handleLoadLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Database size={16} className="mb-1 mx-auto" /> 读取</button>
+             <button onClick={() => fileInputRef.current?.click()} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Upload size={16} className="mb-1 mx-auto" /> 导入</button>
              <button onClick={exportJSON} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><FileJson size={16} className="mb-1 mx-auto" /> 导出</button>
+             <input type="file" accept=".txt,.csv" ref={fileInputRef} onChange={handleImportTriples} className="hidden" />
           </div>
         </div>
       )}
