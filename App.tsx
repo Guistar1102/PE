@@ -3,10 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Network, 
   Settings, 
-  Save, 
   Trash2, 
   Search, 
-  Database,
   LayoutTemplate,
   PlusCircle,
   Link2,
@@ -148,19 +146,6 @@ const App: React.FC = () => {
     if (window.confirm("确定要清空画布吗？")) {
       setGraphData({ nodes: [], links: [] });
       setSelectedNode(null);
-    }
-  };
-
-  const handleSaveLocal = () => {
-    localStorage.setItem('gas_pe_graph_data', JSON.stringify(graphData));
-    showNotification("图谱已保存至本地缓存", 'success');
-  };
-
-  const handleLoadLocal = () => {
-    const saved = localStorage.getItem('gas_pe_graph_data');
-    if (saved) {
-      setGraphData(JSON.parse(saved));
-      showNotification("已加载本地图谱数据", 'success');
     }
   };
 
@@ -347,9 +332,7 @@ const App: React.FC = () => {
 
           </div>
           
-          <div className="p-4 border-t border-slate-800 grid grid-cols-4 gap-2">
-             <button onClick={handleSaveLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Save size={16} className="mb-1 mx-auto" /> 保存</button>
-             <button onClick={handleLoadLocal} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Database size={16} className="mb-1 mx-auto" /> 读取</button>
+          <div className="p-4 border-t border-slate-800 grid grid-cols-2 gap-2">
              <button onClick={() => fileInputRef.current?.click()} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><Upload size={16} className="mb-1 mx-auto" /> 导入</button>
              <button onClick={exportJSON} className="p-2 bg-slate-800 hover:bg-slate-700 transition-colors rounded text-xs text-slate-300"><FileJson size={16} className="mb-1 mx-auto" /> 导出</button>
              <input type="file" accept=".txt,.csv" ref={fileInputRef} onChange={handleImportTriples} className="hidden" />
